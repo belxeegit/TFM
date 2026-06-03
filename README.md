@@ -10,6 +10,7 @@ Estudio multiómico de la dormancia invernal en yemas florales de almendro (_Pru
 
 
 ### Estructura del repositorio
+```
 TFM/
 ├── RNA-seq/
 │   ├── 01_alignment/          # Scripts HISAT2 v2.1.0
@@ -29,6 +30,7 @@ TFM/
 ├── figures/                   # Scripts Python/matplotlib; salida 600 DPI
 └── data/
     └── Expression_Profile_Nonpareil_gene.xlsx
+```
 
 
 
