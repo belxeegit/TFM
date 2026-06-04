@@ -112,7 +112,7 @@ p_all_factors <- plot_factors(
   scale_color_manual(values = col_dormancy)
 ggsave("mofa2_all_factors_dormancy.pdf", p_all_factors, width=12, height=10)
 
-# ── 4. Top pesos por factor y vista ──────────────────────────────────────────
+# 4. Top pesos por factor y vista 
 views_list <- c("RNA-seq","miRNA","CG_promoter","CHG_promoter","CHH_promoter")
 
 # Función: top features para una vista y factor dados
@@ -179,7 +179,7 @@ if("group" %in% colnames(Z)) {
 
 Z_meta <- left_join(Z, samples_meta, by="sample")
 
-# ANOVA por factor ~ dormancy state (solo Control para la pregunta principal)
+# ANOVA por factor - dormancy state
 Z_ctrl <- Z_meta %>% filter(group == "Control")
 
 anova_results <- Z_ctrl %>%
@@ -225,7 +225,7 @@ p_heat <- plot_data_heatmap(
 ggsave("mofa2_heatmap_RNAseq_F1.pdf", p_heat, width=8, height=7)
 
 # 10. Scatter de scores con gradiente de dormancia
-# Figura de alta calidad para el TFM
+# Figuras
 dormancy_numeric <- c("Endodormancy"=1, "EndoRelease"=2, "Ecodormancy"=3)
 
 Z_plot <- Z_meta %>%
@@ -267,12 +267,12 @@ cat("  - mofa2_anova_factors_dormancy.csv\n")
 
 
 ############################################
-# Factor 8 inspección
+# Inspección Factor 8
 p_f8 <- plot_factor(model, factor=8, color_by="dormancy") +
   scale_color_manual(values=col_dormancy)
 ggsave("mofa2_factor8_beeswarm.pdf", p_f8, width=5, height=4)
 
-# Factor 2 vs batch
+# Inspección Factor 2
 samples_meta$collection_group <- ifelse(
   samples_meta$sample %in% c("1","2","3","28","29","30"),
   "Batch1_Nov21", "Batch2_Jan-Mar22"
@@ -281,30 +281,7 @@ samples_metadata(model) <- samples_meta
 p_f2_batch <- plot_factor(model, factor=2, color_by="collection_group") +
   labs(title="Factor 2 – posible efecto de lote")
 ggsave("mofa2_factor2_batch_check.pdf", p_f2_batch, width=5, height=4)
-
-
-
-# 3. Heatmap EXCLUSIVO de estos genes en el modelo MOFA 
-# En lugar de decirle a MOFA "píntame los top genes", le decimos "píntame MIS genes"
-# Esto generará un mapa de calor ordenado por etapas de dormancia.
-
-# Hay que añadir el prefijo de vuelta para que MOFA los encuentre en la matriz
-features_para_heatmap <- paste0("RNA_seq__", genes_campana)
-
-p_heat_campana <- plot_data_heatmap(
-  model,
-  view = "RNA-seq",
-  features = features_para_heatmap,
-  cluster_rows = TRUE,   # Agrupa los genes que se comportan igual
-  cluster_cols = FALSE,  # Mantiene el orden de las muestras (EndoD -> EndoR -> EcoD)
-  show_rownames = TRUE,
-  show_colnames = FALSE,
-  annotation_samples = "dormancy",
-  annotation_colors = list(dormancy = col_dormancy),
-  scale = "row"          # Fundamental para ver bien los picos de expresión
-)
-ggsave("mofa2_heatmap_genes_campana.pdf", p_heat_campana, width=8, height=6)
-
+############################################
 
 
 # 11. Extracción de Top Genes del Factor 1 para Análisis Funcional (GO/KEGG)
