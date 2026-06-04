@@ -35,7 +35,7 @@ dormancy_map <- c(
 samples_meta <- samples_metadata(model)
 samples_meta$dormancy <- dormancy_map[samples_meta$sample]
 samples_meta$dormancy <- factor(samples_meta$dormancy,
-                                levels = c("EndoD","EndoR","EcoD"))
+                                levels = c("Endodormancy","EndoRelease","Ecodormancy"))
 samples_metadata(model) <- samples_meta
 
 col_dormancy <- c("EndoD"="#2166AC",
@@ -145,10 +145,10 @@ for (v in c("RNA-seq","miRNA")) {
 }
 
 # 5. Limpiar feature names (quitar prefijo de vista) 
-# Corrección del regex: ".*__" elimina todo hasta el doble guion bajo
+# Corrección: ".*__" elimina todo hasta el doble guion bajo
 clean_feature_name <- function(x) sub(".*__", "", x)
 
-# 6. Tabla de pesos para genes candidatos estrella 
+# 6. Tabla de pesos para genes candidatos estrella de omicas individuales
 star_candidates <- c("PRUDU35267","PRUDU20869","PRUDU17011","PRUDU31204",
                      "PRUDU20878","PRUDU26110","PRUDU12379","PRUDU1176",
                      "PRUDU41546","PRUDU45936")
@@ -171,7 +171,7 @@ print(star_weights)
 # Extraer scores
 Z <- get_factors(model, as.data.frame=TRUE)
 
-# IMPORTANTE: Eliminamos la columna 'group' por defecto de Z para evitar 
+# Eliminamos la columna 'group' por defecto de Z para evitar 
 # que colisione con la columna 'group' real de samples_meta al hacer el join.
 if("group" %in% colnames(Z)) {
   Z <- Z %>% select(-group)
